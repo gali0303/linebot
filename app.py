@@ -21,14 +21,19 @@ handler = WebhookHandler(channel_secret)
 def home():
     return 'Welcome to the LINE Bot!', 200
 
+
 @app.route('/callback', methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
+    
+    logging.info(f"Request body: {body}")  # 記錄請求的主體
+    logging.info(f"Signature: {signature}")  # 記錄簽名
 
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        logging.error("Invalid signature. Aborting.")
         abort(400)
 
     return 'OK'
