@@ -1,9 +1,14 @@
 from flask import Flask, request, abort
 import os
+import logging
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 app = Flask(__name__)
+
+# 設定日誌
+logging.basicConfig(level=logging.INFO)
 
 # 獲取環境變數
 channel_access_token = os.getenv('CHANNEL_ACCESS_TOKEN')
@@ -27,6 +32,13 @@ def callback():
         abort(400)
 
     return 'OK'
+
+# 設置消息處理器
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='Hello, {}'.format(event.message.text)))
 
 @app.route('/healthz', methods=['GET'])
 def health_check():
