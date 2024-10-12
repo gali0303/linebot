@@ -4,6 +4,7 @@ import logging
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from response import LineBotResponse
 
 app = Flask(__name__)
 
@@ -41,9 +42,7 @@ def callback():
 # 設置消息處理器
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text='Hello, {}'.format(event.message.text)))
+    line_bot_response.handle_message(event)
 
 @app.route('/healthz', methods=['GET'])
 def health_check():
