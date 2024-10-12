@@ -10,17 +10,22 @@ class LineBotResponse:
         user_id = event.source.user_id
         current_time = datetime.now()
 
-        # 判斷用戶是否在三分鐘內發送過消息
+        # 判斷用戶是否在一分鐘內發送過消息
         if user_id in self.user_last_message_time:
             last_time = self.user_last_message_time[user_id]
-            if current_time - last_time < timedelta(minutes=3):
-                return  # 在三分鐘內不再回覆
+            if current_time - last_time < timedelta(minutes=1):
+                # 在一分鐘內已經發送過消息
+                self.line_bot_api.reply_message(
+                    event.reply_token,
+                    TextSendMessage(text='OK, {}, I get it!'.format(event.message.text))
+                )
+                return
+        else:
+            # 是第一次發送消息
+            self.line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text='Hello, {}, what can I help?'.format(event.message.text))
+            )
 
         # 更新用戶的最後消息時間
         self.user_last_message_time[user_id] = current_time
-
-        # 發送回覆
-        self.line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text='Hello, {}, what can I help?'.format(event.message.text))
-        )
