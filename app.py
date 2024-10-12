@@ -3,8 +3,8 @@ import os
 import logging
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from response import LineBotResponse
+from linebot.models import MessageEvent, TextMessage
+from response import LineBotResponse  # 確保正確導入
 
 app = Flask(__name__)
 
@@ -18,12 +18,12 @@ channel_secret = os.getenv('CHANNEL_SECRET')
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
+# 創建 LineBotResponse 實例（確保在全局範圍內）
 line_bot_response = LineBotResponse(line_bot_api)
 
 @app.route('/', methods=['GET'])
 def home():
     return 'Welcome to the LINE Bot!', 200
-
 
 @app.route('/callback', methods=['POST'])
 def callback():
