@@ -18,6 +18,8 @@ channel_secret = os.getenv('CHANNEL_SECRET')
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
+line_bot_response = LineBotResponse(line_bot_api)
+
 @app.route('/', methods=['GET'])
 def home():
     return 'Welcome to the LINE Bot!', 200
@@ -42,6 +44,7 @@ def callback():
 # 設置消息處理器
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    # 使用全局範圍內定義的 line_bot_response 來處理消息
     line_bot_response.handle_message(event)
 
 @app.route('/healthz', methods=['GET'])
