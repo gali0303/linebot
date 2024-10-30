@@ -17,14 +17,14 @@ class LineBotResponse:
                 # 在一分鐘內已經發送過消息
                 self.line_bot_api.reply_message(
                     event.reply_token,
-                    TextSendMessage(text='OK, {}, I get it!'.format(event.message.text))
+                    TextSendMessage(text='好的， {}, 我來看看!'.format(event.message.text))
                 )
                 return
         else:
             # 是第一次發送消息
             self.line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(text='Hello, {}, what can I help?'.format(event.message.text))
+                TextSendMessage(text='哈囉! {}, 我可以幫你什麼?'.format(event.message.text))
             )
 
         # 更新用戶的最後消息時間
